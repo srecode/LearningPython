@@ -1,0 +1,20 @@
+list1:
+ - host-1
+ - host-2
+ - host-3
+ - host-4
+list2:
+ - host-5
+ - host-6
+ - host-7
+ - host-8
+list3:
+ - host-9
+ - host-10
+ - host-11
+ - host-12
+list4:
+ - host-13
+ - host-14
+ - host-15
+ - host-16
