@@ -1,0 +1,45 @@
+import os
+ 
+class Profile(Struct):
+  name                = Required(String)
+  role                = Default(String, os.environ['USER'])
+  contact             = Default(String, '{}@twitter.com'.format(os.environ['USER']))
+  environment         = Required(String)
+  pkg_version         = Default(String, 'latest')
+ 
+# copy hello_world.py locally
+install = Packer.install('hello_world', version='{{profile.pkg_version}}')
+  
+# run the script
+hello_world = Process(
+  name = 'hello_world',
+  cmdline = 'python hello_world.py')
+  
+# describe the task
+hello_world_task = SequentialTask(
+  processes = [install, hello_world],
+  resources = Resources(cpu = 1, ram = 64*MB, disk=128*MB)
+)
+ 
+# describe the service
+hello_world_service = Service(
+  contact='{{profile.contact}}',
+  cluster='{{cluster}}',
+  environment='{{profile.environment}}',
+  role='{{profile.role}}',
+  name='{{profile.name}}',
+  task=hello_world_task,
+  update_config=UpdateConfig(),
+  announce=Announcer()
+)
+ 
+# you may eventually have a staging & prod profile as well
+Devel = Profile(
+  name = 'hello_world',
+  environment = 'devel',
+  pkg_version = 'latest'
+)
+ 
+jobs = [
+  hello_world_service(cluster='smf1', instances=1).bind(profile=Devel)
+]
