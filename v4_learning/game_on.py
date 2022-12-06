@@ -1,5 +1,3 @@
-game_list = [0, 1, 2]
-
 def display_game(game_list):
     print("Here is your list")
     print(game_list)
@@ -33,3 +31,16 @@ def gameon_choice():
         return True
     else:
         return False
+
+game_on = True
+game_list = [0, 1, 2]
+
+while game_on:
+    display_game(game_list)
+    position = position_choice()
+
+    game_list = replace_position(game_list, position)
+
+    display_game(game_list)
+
+    game_on
